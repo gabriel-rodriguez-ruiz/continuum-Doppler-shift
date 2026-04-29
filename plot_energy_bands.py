@@ -26,12 +26,12 @@ Delta =  0.08  #2*0.122 # 0.08 #0.08   #  meVs
 mu = E_F  # 623 Delta #50.6  #  meV
 # gamma = 9479 # meV (nm)²
 Lambda = 15  #15 #187*Delta/2 # meV*nm    # 8 * Delta  #0.644 meV 
-theta = np.pi/2
+theta = 0
 
 B = 3*Delta   #0.28*Delta
 B_x = B * np.cos(theta)
 B_y = B * np.sin(theta)
-theta_values = np.array([0, np.pi/2])
+theta_values = np.array([np.pi/2])
 q_B_constant = 0 #0.024/8
 phi_x = 0  #1e-3 * k_F #q_B_constant * B  #0.0004  #0.024 * 0.5 * Delta
 phi_y = 0
@@ -42,16 +42,16 @@ k_F_Al = np.sqrt(E_F / gamma_Al ) # 1/nm
 v_F_Al = hbar*k_F_Al/m_Al * 1e-9  # m/s
 Delta_Al = 0
 
-k_values = np.linspace(0.9*k_F, 1.1*k_F, 1000)
+k_values = np.linspace(0.9*k_F, 1.1*k_F, 300)
 # k_values = np.linspace(0.5*k_F, 0.54*k_F, 100)
 # k_values = np.linspace(1.9*k_F, 1.94*k_F, 100)
 
-k_values_Al = np.linspace(0.9*k_F_Al, 1.1*k_F_Al, 100)
+# k_values_Al = np.linspace(0.9*k_F_Al, 1.1*k_F_Al, 100)
 # k_values_Al = np.linspace(0, 3*k_F_Al, 100)
 
-chi_k = gamma_Al*k_values_Al**2 - mu
-chi_k_plus = ( gamma_Al*(k_values_Al+phi_x)**2 - mu + ( gamma_Al*(-k_values_Al+phi_x)**2 - mu ) )/2
-chi_k_minus = ( gamma_Al*(k_values_Al+phi_x)**2 - mu - ( gamma_Al*(-k_values_Al+phi_x)**2 -mu ) ) / 2
+# chi_k = gamma_Al*k_values_Al**2 - mu
+# chi_k_plus = ( gamma_Al*(k_values_Al+phi_x)**2 - mu + ( gamma_Al*(-k_values_Al+phi_x)**2 - mu ) )/2
+# chi_k_minus = ( gamma_Al*(k_values_Al+phi_x)**2 - mu - ( gamma_Al*(-k_values_Al+phi_x)**2 -mu ) ) / 2
 
 
 E = get_Energies_in_polars(k_values, theta_values, mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)
@@ -82,7 +82,7 @@ fig, ax = plt.subplots()
 # ax.plot(k_values_Al/k_F_Al, E[:, 0], marker="o", markersize=3)
 # ax.plot(k_values/k_F, E[:, 0], marker="o", markersize=3)
 ax.plot(k_values/k_F, E[:, 0], marker="v", markersize=3)
-ax.plot(k_values/k_F, E[:, 1], marker="o", markersize=3)
+# ax.plot(k_values/k_F, E[:, 1], marker="o", markersize=3)
 
 # ax.plot(k_values/k_F, sorted_levels, marker="o", markersize=3)
 
@@ -94,9 +94,9 @@ ax.set_ylabel(r"$E$")
 plt.grid()
 
 #%% In cartesian coordinates
-k_x_values = np.linspace(-1.1*k_F_Al, 1.1*k_F_Al, 100)
+k_x_values = np.linspace(-1.5*k_F, 1.5*k_F, 300)
 k_y_values = np.zeros_like(k_x_values)
-E_1 = get_Energies(k_x_values, k_y_values, mu, B, Delta_Al, phi_x, gamma_Al, 0)
+E_1 = get_Energies(k_x_values, k_y_values, mu, B, Delta, phi_x, gamma, Lambda)
 
 fig, ax = plt.subplots()
 

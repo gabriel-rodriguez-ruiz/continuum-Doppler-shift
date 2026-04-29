@@ -10,7 +10,7 @@ import numpy as np
 import multiprocessing
 from pathlib import Path
 import scipy
-from get_pockets import plot_interpolated_contours, integrate_pocket, get_pockets_contour, integrate_brute_force, integrate_Romberg, integrate_brute_force_current_x, integrate_brute_force_current_y
+from get_pockets import integrate_brute_force_current_x, integrate_brute_force_current_y
 from diagonalization import get_Energies_in_polars
 from scipy.interpolate import CubicSpline
 from scipy.signal import find_peaks
@@ -19,7 +19,7 @@ from skopt.space import Space
 
 c = 3e17 # nm/s  #3e8 # m/s
 m_e =  5.1e8 / c**2 # meV s²/(nm)²
-m = 0.403 * m_e # meV s²/(nm)²
+m = 0.0403 * m_e # meV s²/(nm)²
 hbar = 6.58e-13 # meV s
 gamma = hbar**2 / (2*m) # meV (nm)²
 E_F = 50.6 # meV
@@ -29,13 +29,13 @@ mu_B = 5.788e-2 # meV/T
 
 Delta = 0.08   #  meVs
 mu = 50.6   # 623 Delta #50.6  #  meV
-Lambda = 16*Delta # meV*nm    # 8 * Delta  #0.644 meV 
+Lambda = 15 # meV*nm    # 8 * Delta  #0.644 meV 
 
 N_phi = 3  #101  # 101  # it should be odd to include zero
 h = 1e-5*k_F
 
 phi_x_values = np.array([-h, 0, h])     #np.linspace(-0.002 * k_F, 0.002 * k_F, N_phi)   #np.linspace(-0.003 * k_F, 0.003 * k_F, N_phi)
-cut_off = 1.1*k_F # 1.1 k_F
+cut_off = 2*k_F # 1.1 k_F
 
 theta = np.pi/2 #np.pi/2   # float
 
@@ -46,7 +46,7 @@ N_polifit = 2  # 4
 C = 0
 
 T = True
-beta = 150
+beta = 25
 
 
 parameters = {"gamma": gamma, "points": points, "k_F": k_F,

@@ -30,12 +30,12 @@ k_B = 8.617e-2   # meV/K
 
 
 T_c = 1.61
-Delta_0 = 1/3 * 1.76*k_B*T_c
+Delta_0 = 1 * 1.76*k_B*T_c
 # Delta = 2*0.08   #  meVs
 mu = E_F   # 623 Delta #50.6  #  meV
 # gamma = 9479 # meV (nm)²
-Lambda = 15  #15 # meV*nm    # 8 * Delta  #0.644 meV 
-B = 0.99 * Delta_0
+Lambda = 0  #15 # meV*nm    # 8 * Delta  #0.644 meV 
+B = 0 * Delta_0
 theta = np.pi/2
 B_x = B * np.cos(theta)
 B_y = B * np.sin(theta)
@@ -43,7 +43,7 @@ N_phi = 3  #101  # 101  # it should be odd to include zero
 h = 1e-4*k_F
 
 phi_x_values = np.array([-h, 0, h])     #np.linspace(-0.002 * k_F, 0.002 * k_F, N_phi)   #np.linspace(-0.003 * k_F, 0.003 * k_F, N_phi)
-cut_off = 5*k_F # 1.1 k_F
+cut_off = 2*k_F # 1.1 k_F
 
 theta = np.pi/2 #np.pi/2   # float
 
@@ -55,7 +55,11 @@ C = 0
 
 T = True
 
-radius_values = radius_values = [np.linspace(0.96*k_F, 0.97*k_F, N), np.linspace(0.97*k_F, 1.03 *k_F, N), np.linspace(1.03*k_F, 1.04*k_F, N)]
+radius_values = [np.linspace(0.96*k_F, 0.97*k_F, N), np.linspace(0.97*k_F, 1.03*k_F, N), np.linspace(1.03*k_F, 1.04*k_F, N)]
+k_1 = (-Lambda + np.sqrt(Lambda**2 
+                             + 4*gamma*mu)) / (2*gamma)
+k_2 = (Lambda + np.sqrt(Lambda**2
+                             + 4*gamma*mu)) / (2*gamma)
 
 parameters = {"gamma": gamma, "points": points, "k_F": k_F,
               "mu": mu, "phi_x_values": phi_x_values,
@@ -65,7 +69,7 @@ parameters = {"gamma": gamma, "points": points, "k_F": k_F,
               }
 
 def integrate_beta(beta):
-    Delta = 1/3 * 1.76*k_B*T_c * np.tanh(1.76*k_B*T_c*1.74*np.sqrt(1-1/(T_c*k_B*beta))/(2/beta))
+    Delta = 1/(2.5) * 0.2 * np.tanh(0.2*beta/2)
     # Delta = Delta_0
     current_phi = np.zeros_like(phi_x_values)
 
@@ -91,7 +95,7 @@ def integrate_beta(beta):
     return superfluid_density_finite_differences_0, superfluid_density_yy_0
 
 if __name__ == "__main__":
-    T_values = np.linspace(1e-2, 0.8, points)
+    T_values = np.linspace(1e-2, 0.94, points)
     beta_values = 1/(k_B*T_values)
     integrate = integrate_beta
     B_direction = f"{theta:.2}"

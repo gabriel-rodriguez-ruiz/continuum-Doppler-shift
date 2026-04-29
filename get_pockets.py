@@ -85,7 +85,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -93,7 +93,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -114,7 +114,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -122,7 +122,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y )[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -145,7 +145,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -153,7 +153,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -169,7 +169,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         low_integral = np.zeros(4, dtype=complex)
     
         for i in range(2):
-            f = lambda r, theta: ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
+            f = lambda r, theta: 1/2 * ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                        )/(2*h) )
             low_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, 0, np.min(radius_values_1)) 
@@ -178,7 +178,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         high_integral = np.zeros(4, dtype=complex)
     
         for i in range(2):
-            f = lambda r, theta:( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
+            f = lambda r, theta: 1/2 * ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                        )/(2*h) )
             high_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, np.max(radius_values_2), cut_off) 
@@ -196,7 +196,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -204,7 +204,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -218,7 +218,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         low_integral = np.zeros(4)
     
         for i in range(2):
-            f = lambda r, theta: ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
+            f = lambda r, theta: 1/2 * ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                        )/(2*h) )
             low_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, 0, np.min(radius_values)) 
@@ -227,7 +227,7 @@ def integrate_brute_force_current_x(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         high_integral = np.zeros(4)
     
         for i in range(2):
-            f = lambda r, theta:( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
+            f = lambda r, theta: 1/2 * ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x + h, gamma, Lambda, B_x, phi_y)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x - h, gamma, Lambda, B_x, phi_y)[0][0][i]
                        )/(2*h) )
             high_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, np.max(radius_values), cut_off) 
@@ -253,7 +253,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -261,7 +261,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -282,7 +282,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -290,7 +290,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -313,7 +313,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -321,7 +321,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -337,7 +337,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         low_integral = np.zeros(4)
     
         for i in range(2):
-            f = lambda r, theta: ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
+            f = lambda r, theta: 1/2 * ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                        )/(2*h) )
             low_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, 0, np.min(radius_values_1)) 
@@ -346,7 +346,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         high_integral = np.zeros(4)
     
         for i in range(2):
-            f = lambda r, theta:( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
+            f = lambda r, theta: 1/2 * ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                        )/(2*h) )
             high_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, np.max(radius_values_2), cut_off) 
@@ -364,7 +364,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
                         if E <= 0:
-                            Z[j, k] = r * current
+                            Z[j, k] = 1/2 * r * current
                         else:
                             Z[j, k] = 0
                     else:
@@ -372,7 +372,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
                         current = fermi_function(energy, beta) * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                                    get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                                    )/(2*h)
-                        Z[j, k] = r * current
+                        Z[j, k] = 1/2 * r * current
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
                                                        dx=np.diff(theta_values)[0])
@@ -386,7 +386,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         low_integral = np.zeros(4)
         
         for i in range(2):
-            f = lambda r, theta: ( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
+            f = lambda r, theta: ( 1/2 * r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                        )/(2*h) )
             low_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, 0, np.min(radius_values)) 
@@ -395,7 +395,7 @@ def integrate_brute_force_current_y(N, mu, B_y, Delta, phi_x, gamma, Lambda, k_F
         high_integral = np.zeros(4)
     
         for i in range(2):
-            f = lambda r, theta:( r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
+            f = lambda r, theta:( 1/2 * r * (get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y + h)[0][0][i]-
                        get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y - h)[0][0][i]
                        )/(2*h) )
             high_integral[i], abserr = scipy.integrate.dblquad(f, 0, 2*np.pi, np.max(radius_values), cut_off) 

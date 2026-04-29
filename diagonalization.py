@@ -36,9 +36,10 @@ def get_Hamiltonian_in_polars(k, theta, mu, B_y, Delta, phi_x, gamma, Lambda, B_
     """Return the Hamiltonian for a given k."""
     k_x = k * np.cos(theta)
     k_y = k * np.sin(theta)
+    # I have putted an anysotropic mass
     chi_k_plus = gamma * ( (k_x + phi_x)**2 + (k_y + phi_y)**2) - mu
     chi_k_minus = gamma * ( (-k_x + phi_x)**2 + (-k_y + phi_y)**2 ) - mu
-    return 1/2 * ( chi_k_plus * np.kron( ( tau_0 + tau_z )/2, sigma_0)
+    return ( chi_k_plus * np.kron( ( tau_0 + tau_z )/2, sigma_0)
                    - chi_k_minus * np.kron( ( tau_0 - tau_z )/2, sigma_0)  
                    - B_y * np.kron(tau_0, sigma_y)
                    - B_x * np.kron(tau_0, sigma_x)
@@ -47,7 +48,7 @@ def get_Hamiltonian_in_polars(k, theta, mu, B_y, Delta, phi_x, gamma, Lambda, B_
                    + Lambda * (-k_x + phi_x) * np.kron( ( tau_0 - tau_z )/2, sigma_y )
                    - Lambda * (k_y + phi_y) * np.kron( ( tau_0 + tau_z )/2, sigma_x )
                    - Lambda * (-k_y + phi_y) * np.kron( ( tau_0 - tau_z )/2, sigma_x )
-                 )       #* 2   # I have dobbled the gap
+                 )       
 
 # def get_Energies_in_polars(k_values, theta_values, mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y):
 #     """Return the energies of the Hamiltonian at a given k."""

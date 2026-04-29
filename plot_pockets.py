@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 c = 3e17 # nm/s  #3e8 # m/s
 m_e =  5.1e8 / c**2 # meV s²/(nm)²
-m = 100 * 0.0403 * m_e # meV s²/(nm)²
+m = 0.0403 * m_e # meV s²/(nm)²
 hbar = 6.58e-13 # meV s
 gamma = hbar**2 / (2*m) # meV (nm)²
 E_F = 50.6 # meV
@@ -30,8 +30,8 @@ mu_B = 5.788e-2 # meV/TT
 Delta = 0.08 #0.08   #  meVs
 mu = E_F  # 623 Delta #50.6  #  meV
 # gamma = 9479 # meV (nm)²
-Lambda = 24*Delta # meV*nm    # 8 * Delta  #0.644 meV 
-theta = np.pi/2
+Lambda = 15 # meV*nm    # 8 * Delta  #0.644 meV 
+theta = 0
 
 B = 3*Delta   #0.28*Delta
 B_x = B * np.cos(theta)
@@ -46,19 +46,18 @@ k_F_Al = np.sqrt(E_F / gamma_Al ) # 1/nm
 v_F_Al = hbar*k_F_Al/m_Al * 1e-9  # m/s
 Delta_Al = 0
 
-k_values = np.linspace(0.945*k_F, 0.965*k_F, 100)
-theta_values = np.linspace(0, 2*np.pi, 100)
+k_values = np.linspace(0.9*k_F, 1.1*k_F, 200)
+theta_values = np.linspace(0, 2*np.pi, 200)
 
 Energies_polar = get_Energies_in_polars(k_values, theta_values, mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)
 
 
 fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
 ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 2], levels=[0])
-
-k_values = np.linspace(1.035*k_F, 1.055*k_F, 100)
-Energies_polar = get_Energies_in_polars(k_values, theta_values, mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)
+ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 0], levels=[0])
 
 ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 1], levels=[0])
+ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 3], levels=[0])
 
 #%%
 

@@ -25,7 +25,7 @@ k_F = np.sqrt(E_F / gamma ) # 1/nm
 v_F = hbar*k_F/m * 1e-9  # m/s
 mu_B = 5.79e-2  # meV/T
 
-Delta = 0 #0.122 #0.08  #0.08  #  meV
+Delta = 0.16 #0.122 #0.08  #0.08  #  meV
 mu = E_F   # 623 Delta #50.6  #  meV
 Lambda = 0 # 15 # 8 * Delta  #0.644 meV 
 
@@ -34,31 +34,30 @@ gamma_Al = hbar**2 / (2*m_Al) # meV (nm)²
 k_F_Al = np.sqrt(E_F / gamma_Al ) # 1/nm
 v_F_Al = hbar*k_F_Al/m_Al * 1e-9  # m/s
 
-B = 0 * Delta #0.5 * 0.08  # meV
+B = 1 * Delta #0.5 * 0.08  # meV
 q_B = 0 #1e-4*k_F #0.024/8 * B  # 1/nm
 theta = np.pi/2
 B_x = B * np.cos(theta)
 B_y = B * np.sin(theta)
 N_phi = 3  # it should be odd to include zero
-cut_off = 10 * k_F # 1.1 k_F
+cut_off = 5 * k_F # 1.1 k_F
 cut_off_Al = 1.1*k_F_Al   # 1.1*k_F_Al 
 Delta_Al = 0.2   #0.2
 
 
 phi_y = 0
 
-T = False
-beta = 150
+T = True
+beta = 25
 
-N = 50
+N = 100
 n_cores = 19
 points = 1 * n_cores
 
 # radius_values = np.linspace(0.98*k_F, 1.02*k_F, N)
 # radius_values = [np.linspace(0.95*k_F, 0.98*k_F, N), np.linspace(0.98*k_F, 1.02*k_F, N), np.linspace(1.02*k_F, 1.05*k_F, N)]
 # radius_values = [np.linspace(0.984*k_F, 0.994*k_F, N), np.linspace(0.994*k_F, 1.006*k_F, N), np.linspace(1.006*k_F, 1.016*k_F, N)]
-radius_values = [np.linspace(0.955*k_F, 0.98*k_F, N), np.linspace(0.98*k_F, 1.02*k_F, N), np.linspace(1.02*k_F, 1.05*k_F, N)]
-
+radius_values = [np.linspace(0.96*k_F, 0.97*k_F, N), np.linspace(0.97*k_F, 1.03 *k_F, N), np.linspace(1.03*k_F, 1.04*k_F, N)]
     
 parameters = {"gamma": gamma, "points": points, "k_F": k_F,
               "mu": mu, "Delta": Delta,
