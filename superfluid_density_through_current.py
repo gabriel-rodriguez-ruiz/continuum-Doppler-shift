@@ -14,8 +14,8 @@ from get_pockets import integrate_brute_force_current_x, integrate_brute_force_c
 from diagonalization import get_Energies_in_polars
 from scipy.interpolate import CubicSpline
 from scipy.signal import find_peaks
-from skopt import gp_minimize
-from skopt.space import Space
+# from skopt import gp_minimize
+# from skopt.space import Space
 
 c = 3e17 # nm/s  #3e8 # m/s
 m_e =  5.1e8 / c**2 # meV s²/(nm)²
@@ -40,13 +40,13 @@ cut_off = 2*k_F # 1.1 k_F
 theta = np.pi/2 #np.pi/2   # float
 
 N = 300 #300 #100  #514   #300
-n_cores = 19
+n_cores = 15
 points = 1* n_cores
 N_polifit = 2  # 4
 C = 0
 
 T = True
-beta = 25
+beta = 50
 
 
 parameters = {"gamma": gamma, "points": points, "k_F": k_F,

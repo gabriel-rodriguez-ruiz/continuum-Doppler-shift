@@ -14,8 +14,7 @@ import scipy
 
 data_folder = Path(r"./Data")
 
-# file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=15_points=57_N_phi=3_N=100_T=True_beta=100_m=2.2836666666666667e-28.npz"
-file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=15_points=19_N_phi=3_N=100_T=True_beta=75_m=2.2836666666666667e-28.npz"
+file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=15_points=57_N_phi=3_N=100_T=True_beta=50_m=2.2836666666666667e-28.npz"
 
 Data = np.load(file_to_open)
 # superfluid_density = Data["superfluid_density"]
@@ -30,7 +29,7 @@ superfluid_density_xx = Data["superfluid_density_xx"]
 superfluid_density_yy = Data["superfluid_density_yy"]
 
 fig, ax = plt.subplots()
-ax.scatter(B_values/Delta, superfluid_density_xx, label=r"$D_{s}(B_{\perp}, \textbf{q}_B=0)$",
+ax.scatter(B_values/Delta, superfluid_density_xx, label=r"$D_{s}(B_{\perp}, \mathbf{q}_B=0)$",
              s=40, marker="v")
 
 
@@ -88,17 +87,18 @@ def interpolation_for_theory(x):
             ]
 
 def model_parallel(x, a, c):
-    return (interpolation_for_theory(x)[1] - interpolation_for_theory(0)[1]) / (a + interpolation_for_theory(0)[1]) #+ c* x**2
+    return (interpolation_for_theory(x)[1] - interpolation_for_theory(0)[1])/(interpolation_for_theory(0)[1] + a) + c* x**2
 
-def model_perpendicular(x, c):
-    return (interpolation_for_theory(x)[0] - interpolation_for_theory(0)[0]) / interpolation_for_theory(0)[0] #+ c* x**2
+def model_perpendicular(x, a, c):
+    return (interpolation_for_theory(x)[0] - interpolation_for_theory(0)[0])/(interpolation_for_theory(0)[0] + a)  + c* x**2
+
 
 def model_diagonal(x, c):
     return (interpolation_for_theory(x)[2] - interpolation_for_theory(0)[2]) / interpolation_for_theory(0)[2] #+ c* x**2
 
-B_c = field_0[15]   #field_0[9]   #data["field 0°"][14]# 0.07  T critical field
+B_c = 0.076   #field_0[9]   #data["field 0°"][14]# 0.07  T critical field
 mu_B = 5.79e-2 # meV/T
-g = 0.08 / (mu_B*B_c)  #Delta/(mu_B*B_c )   #1 / 1.7
+g = 2 * 0.08 / (mu_B*B_c)  #Delta/(mu_B*B_c )   #1 / 1.7
 g_xx = g
 g_yy = g
 
@@ -111,31 +111,33 @@ x_model_perpendicular  = field_90[:41]/B_c  #field_90[7:41]/B_c
 x_model_diagonal  = field_45[:41]/B_c
 
 
-initial_parameters_parallel = [ 20000, 2.10435188e+06]
+initial_parameters_parallel = [ 10000, -1.26647832e+03]
 popt_parallel, pcov_parallel = curve_fit(model_parallel, x_model_parallel, n_s_0[:41],
                                           p0=initial_parameters_parallel)
 
-initial_parameters_perpendicular = [ 3.73583079e+06]
+initial_parameters_perpendicular = [ 3.73583079e+06, -5.40525133e+02]
 popt_perpendicular, pcov_perpendicular = curve_fit(
                                                    model_perpendicular, x_model_perpendicular, n_s_90[:41],
                                                    p0=initial_parameters_perpendicular
                                                    )
 
-scale_factor_perpendicular = 4
+scale_factor_perpendicular = 3.9
 
 popt_perpendicular[0] = 1*popt_perpendicular[0]   # 2.5
 
 standard_deviation_parallel = np.sqrt(np.diag(pcov_parallel))
 standard_deviation_perpendicular = np.sqrt(np.diag(pcov_perpendicular))
 
-ax.plot(B_parallel[:41], model_parallel(x_model_parallel, *popt_parallel), "-b",  label=r"fit of $n_s(\gamma=0, \theta=0°)$", zorder=3)
+# ax.plot(B_parallel[:41], model_parallel(x_model_parallel, *popt_parallel), "-b",  label=r"fit of $n_s(\gamma=0, \theta=0°)$", zorder=3)
+# ax.plot(B_values/Delta*B_c, (superfluid_density_yy-superfluid_density_yy[0])/(superfluid_density_yy[0]+popt_parallel[0]), "-bo",  label=r"fit of $n_s(\gamma=0, \theta=0°)$", zorder=3)
 ax.plot(B_values/Delta*B_c, (superfluid_density_yy-superfluid_density_yy[0])/(superfluid_density_yy[0]+popt_parallel[0]), "-bo",  label=r"fit of $n_s(\gamma=0, \theta=0°)$", zorder=3)
 
 # ax.plot(B_perpendicular[7:19], model_perpendicular(x_model_perpendicular, *popt_perpendicular) + c*B_perpendicular[7:19]**2, "--ko",  label=r"fit of $n_s(\gamma=0, \theta=90°)$")
 # ax.plot(B_perpendicular[0:19], c*B_perpendicular[0:19]**2, "--ko",  label=r"fit of $n_s(\gamma=0, \theta=90°)$")
-ax.plot(B_values/Delta*B_c, scale_factor_perpendicular * (superfluid_density_xx-superfluid_density_xx[0])/(superfluid_density_xx[0]+popt_parallel[0]),
+# ax.plot(B_values/Delta*B_c, scale_factor_perpendicular * (superfluid_density_xx-superfluid_density_xx[0])/(superfluid_density_xx[0]+popt_parallel[0]),
+#         "--ko",  label=r"fit of $n_s(\gamma=0, \theta=90°)$")
+ax.plot(B_values/Delta*B_c,  ( (superfluid_density_xx-superfluid_density_xx[0])/(superfluid_density_xx[0]+ 1/scale_factor_perpendicular*popt_parallel[0])),
         "--ko",  label=r"fit of $n_s(\gamma=0, \theta=90°)$")
-
 plt.axvline(x=B_c, color='r', linestyle='--', linewidth=2)
 
 ax.set_xlabel(r"$B$ [$T$]")

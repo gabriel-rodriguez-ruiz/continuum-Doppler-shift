@@ -18,22 +18,22 @@ hbar = 6.58e-13 # meV s
 gamma = hbar**2 / (2*m) # meV (nm)²
 E_F = 50.6 #50.6 # meV
 k_F = np.sqrt(E_F / gamma ) # 1/nm
-v_F = hbar*k_F/m * 1e-9  # m/s
+v_F = hbar*k_F/m * 1e-9  # m/s  #np.sqrt(2*mu/m)*1e-9
 mu_B = 5.788e-2 # meV/TT
 
 
-Delta =  0.08  #2*0.122 # 0.08 #0.08   #  meVs
+Delta = 0.08# 0.08 #0.08  #2*0.122 # 0.08 #0.08   #  meVs
 mu = E_F  # 623 Delta #50.6  #  meV
 # gamma = 9479 # meV (nm)²
-Lambda = 15  #15 #187*Delta/2 # meV*nm    # 8 * Delta  #0.644 meV 
-theta = 0
+Lambda = 30  #15 #187*Delta/2 # meV*nm    # 8 * Delta  #0.644 meV 
+theta = np.pi/2
 
 B = 3*Delta   #0.28*Delta
 B_x = B * np.cos(theta)
 B_y = B * np.sin(theta)
-theta_values = np.array([np.pi/2])
-q_B_constant = 0 #0.024/8
-phi_x = 0  #1e-3 * k_F #q_B_constant * B  #0.0004  #0.024 * 0.5 * Delta
+theta_values = np.array([0])
+q_B_constant = 0#0.024/8
+phi_x = 0#q_B_constant*2*Delta  #-1/2*B/gamma/k_F  #1e-3 * k_F #q_B_constant * B  #0.0004  #0.024 * 0.5 * Delta
 phi_y = 0
 
 m_Al = 1.4 * m_e # meV s²/(nm)²
@@ -82,12 +82,28 @@ fig, ax = plt.subplots()
 # ax.plot(k_values_Al/k_F_Al, E[:, 0], marker="o", markersize=3)
 # ax.plot(k_values/k_F, E[:, 0], marker="o", markersize=3)
 ax.plot(k_values/k_F, E[:, 0], marker="v", markersize=3)
+
 # ax.plot(k_values/k_F, E[:, 1], marker="o", markersize=3)
 
 # ax.plot(k_values/k_F, sorted_levels, marker="o", markersize=3)
 
 # ax.plot(k_values_Al/k_F_Al, chi_k_minus/2 - 1/2*np.sqrt(chi_k_plus**2 + Delta_Al**2))
 # ax.plot(k_values/k_F, chi_k_minus/2 - 1/2*np.sqrt(chi_k_plus**2 + Delta_Al**2))
+
+# chi_k_plus = ( gamma*(k_values+phi_x)**2 - mu + ( gamma*(-k_values+phi_x)**2 - mu ) )/2
+# chi_k_minus = ( gamma*(k_values+phi_x)**2 - mu - ( gamma*(-k_values+phi_x)**2 -mu ) ) / 2
+chi_k_minus = 2*gamma*k_values*np.cos(theta_values)*phi_x
+chi_k_plus = gamma *( k_values**2 + phi_x**2 ) - mu
+
+E_plus_plus = B + chi_k_minus + np.sqrt(chi_k_plus**2 + Delta**2)
+E_minus_plus = -B + chi_k_minus + np.sqrt(chi_k_plus**2 + Delta**2) 
+E_plus_minus = B + chi_k_minus - np.sqrt(chi_k_plus**2 + Delta**2) 
+E_minus_minus = -B + chi_k_minus - np.sqrt(chi_k_plus**2 + Delta**2) 
+
+ax.plot(k_values/k_F, E_plus_plus)
+ax.plot(k_values/k_F, E_minus_plus)
+ax.plot(k_values/k_F, E_plus_minus)
+ax.plot(k_values/k_F, E_minus_minus)
 
 ax.set_xlabel(r"$k_x/k_F$")
 ax.set_ylabel(r"$E$")

@@ -30,14 +30,14 @@ mu_B = 5.788e-2 # meV/TT
 Delta = 0.08 #0.08   #  meVs
 mu = E_F  # 623 Delta #50.6  #  meV
 # gamma = 9479 # meV (nm)²
-Lambda = 15 # meV*nm    # 8 * Delta  #0.644 meV 
-theta = 0
+Lambda = 0 #15 # meV*nm    # 8 * Delta  #0.644 meV 
+theta = np.pi/2
 
 B = 3*Delta   #0.28*Delta
 B_x = B * np.cos(theta)
 B_y = B * np.sin(theta)
 q_B_constant = 0 #0.024/8
-phi_x = 0 #q_B_constant * B  #0.0004  #0.024 * 0.5 * Delta
+phi_x = 0.0002 #q_B_constant * B  #0.0004  #0.024 * 0.5 * Delta
 phi_y = 0
 
 m_Al = 1.4 * m_e # meV s²/(nm)²
@@ -46,18 +46,43 @@ k_F_Al = np.sqrt(E_F / gamma_Al ) # 1/nm
 v_F_Al = hbar*k_F_Al/m_Al * 1e-9  # m/s
 Delta_Al = 0
 
-k_values = np.linspace(0.9*k_F, 1.1*k_F, 200)
-theta_values = np.linspace(0, 2*np.pi, 200)
+k_values = np.linspace(0.95*k_F, 1.05*k_F, 100)
+theta_values = np.linspace(0, 2*np.pi, 100)
 
 Energies_polar = get_Energies_in_polars(k_values, theta_values, mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)
 
 
 fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 2], levels=[0])
-ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 0], levels=[0])
+# ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 2], levels=[0])
+# ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 0], levels=[0])
 
 ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 1], levels=[0])
-ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 3], levels=[0])
+# ax.contour(theta_values, k_values/k_F, Energies_polar[:, :, 3], levels=[0])
+
+k_plus = (np.ones_like(theta_values)
+           * 1/np.sqrt(gamma) * np.sqrt(mu + np.sqrt(
+               B**2 - Delta**2)) )
+
+k_minus = (np.ones_like(theta_values)
+           * 1/np.sqrt(gamma) * np.sqrt(mu - np.sqrt(
+               B**2 - Delta**2)) )
+
+# ax.plot(theta_values, (phi_x*np.cos(theta_values)
+#         + np.sqrt(k_plus**2 - phi_x**2*np.sin(theta_values)**2))/k_F,
+#            linestyle="dashed")
+
+ax.plot(theta_values, (phi_x*np.cos(theta_values)
+        + np.sqrt(k_minus**2 - phi_x**2*np.sin(theta_values)**2))/k_F,
+           linestyle="dashed")
+
+ax.plot(theta_values, (-phi_x*np.cos(theta_values)
+        + np.sqrt(k_plus**2 - phi_x**2*np.sin(theta_values)**2))/k_F,
+           linestyle="dashed")
+
+
+# ax.plot(theta_values, (-phi_x*np.cos(theta_values)
+#         + np.sqrt(k_minus**2 - phi_x**2*np.sin(theta_values)**2))/k_F,
+#            linestyle="dashed")
 
 #%%
 

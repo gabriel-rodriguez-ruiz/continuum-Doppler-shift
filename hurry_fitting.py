@@ -16,7 +16,7 @@ import scipy
 data_folder = Path(r"./Data")
 
 # file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=14.96_points=19_N_phi=3_N=100_T=True_beta=200_m=2.2836666666666667e-28.npz"
-file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=14.96_points=19_N_phi=3_N=300_T=True_beta=100_m=2.2836666666666667e-28.npz"
+# file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=14.96_points=19_N_phi=3_N=300_T=True_beta=100_m=2.2836666666666667e-28.npz"
 # file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=14.96_points=19_N_phi=3_N=100_T=True_beta=150_m=2.2836666666666667e-28.npz"
 # file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=14.96_points=19_N_phi=3_N=100_T=True_beta=50_m=2.2836666666666667e-28.npz"
 # file_to_open = data_folder / "superfluid_density_with_Doppler_shift_B_in_1.6_(0.0-3.0)_phi_x_in_(-0.0-0.0)_Delta=0.08_lambda=14.96_points=19_N_phi=3_N=100_T=True_beta=300_m=2.2836666666666667e-28.npz"
@@ -29,6 +29,7 @@ Data = np.load(file_to_open)
 B_values = Data["B_values"]
 Delta = Data["Delta"]
 Lambda = Data["Lambda"]
+beta = Data["beta"]
 # phi_eq_B = Data["phi_eq"]
 k_F = Data["k_F"]
 # C = Data["C"]
@@ -36,7 +37,7 @@ superfluid_density_xx = Data["superfluid_density_xx"]
 superfluid_density_yy = Data["superfluid_density_yy"]
 
 fig, ax = plt.subplots()
-ax.scatter(B_values/Delta, superfluid_density_xx, label=r"$D_{s}(B_{\perp}, \textbf{q}_B=0)$",
+ax.scatter(B_values/Delta, superfluid_density_xx, label=r"$D_{s}(B_{\perp}, \mathbf{q}_B=0)$",
              s=40, marker="v")
 
 

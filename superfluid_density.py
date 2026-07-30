@@ -10,7 +10,7 @@ import numpy as np
 import multiprocessing
 from pathlib import Path
 from get_pockets import integrate_brute_force_grand_potential, integrate_brute_force_current_x, integrate_brute_force_current_y
-from skopt import gp_minimize
+#from skopt import gp_minimize
 
 
 c = 3e17 # nm/s  #3e8 # m/s
@@ -25,7 +25,7 @@ mu_B = 5.788e-2 # meV/T
 
 mu = E_F   # 623 Delta #50.6  #  meV
 # gamma = 9479 # meV (nm)²
-Lambda = 15  #15 # meV*nm    # 8 * Delta  #0.644 meV 
+Lambda = 0  #15 # meV*nm    # 8 * Delta  #0.644 meV 
 
 m_Al = 1.4 * m_e # meV s²/(nm)²
 gamma_Al = hbar**2 / (2*m_Al) # meV (nm)²
@@ -33,26 +33,27 @@ k_F_Al = np.sqrt(E_F / gamma_Al ) # 1/nm
 v_F_Al = hbar*k_F_Al/m_Al * 1e-9  # m/s
 
 Aluminum_constant = 0 #20000  #3737
-q_B_constant = 0 #0.024/8
-
+q_B_constant = 0.024/8
 N_phi = 3  #101  # 101  # it should be odd to include zero
-h = 1e-5*k_F
-
+h = 1e-4
 phi_x_values = np.linspace(-h, h, N_phi)      # np.array([-h, 0, h])     #np.linspace(-0.002 * k_F, 0.002 * k_F, N_phi)   #np.linspace(-0.003 * k_F, 0.003 * k_F, N_phi)
 cut_off = 2 * 1.1*k_F # 1.1 k_F
 cut_off_Al = 1.1*k_F_Al # 1.1 k_F
 
 theta = np.pi/2   # float
 
-N = 100 #300 #100  #514   #300
-n_cores = 19
-points = 3 * n_cores
+N = 300 #300 #100  #514   #300
+n_cores = 15
+points = 1 * n_cores
 
-T = True
+T = False
 beta = 40
 Delta_0 = 0.08
 Delta_S = 0.2
 Delta = 1/(2.5) * Delta_S * np.tanh(Delta_S*beta/2)
+
+q_c = Delta/(2*np.sqrt(mu*gamma))
+
 
 # radius_values = [np.linspace(0.95*k_F, 0.97*k_F, N), np.linspace(0.97*k_F, 1.02*k_F, N), np.linspace(1.02*k_F, 1.05*k_F, N)]
 k_1 = (-Lambda + np.sqrt(Lambda**2 
@@ -74,12 +75,21 @@ parameters = {"gamma": gamma, "points": points, "k_F": k_F,
 
 
 def integrate_B(B):
-    B_x =  B * np.cos(theta)
-    B_y =  B * np.sin(theta)
+    B_x =  0 * B * np.cos(theta)
+    B_y =  0 * B * np.sin(theta)
     q_B = q_B_constant * B   # * np.cos(np.pi/2 - theta)
-    # q_B_y = 0.024 * B * np.sin(np.pi/2 - theta)
-    search_space = [(-0.0003, 0.0003)]
+
+    # Define the search space
+    if 4*gamma*mu*q_B**2>Delta**2:
+        k_1 = np.sqrt(q_B**2 + (mu-np.sqrt(4*gamma*mu*q_B**2-Delta**2))/gamma)
+        k_2 = np.sqrt(q_B**2 + (mu+np.sqrt(4*gamma*mu*q_B**2-Delta**2))/gamma)
     
+        radius_values = [np.linspace(0.99*k_1, 1.01*k_1, N), np.linspace(1.01*k_1,
+                                             0.99*k_2, N), np.linspace(0.99*k_2, 1.01*k_2, N)]
+
+    else:
+        radius_values = [np.linspace(0.95*k_F, 0.97*k_F, N), np.linspace(0.97*k_F, 1.02*k_F, N), np.linspace(1.02*k_F, 1.05*k_F, N)]
+        
     #normal density
     # integral, low_integral, high_integral, normal_density = integrate_brute_force_grand_potential(N, mu, B_y, Delta, 0, gamma, Lambda, k_F, cut_off,
     #                                                                   B_x, 0, T, beta, radius_values)    
@@ -109,7 +119,7 @@ def integrate_B(B):
             acq_func='LCB',  #Lower Confidence Bound (more exploratory) #"EI"  Expected Improvement
             noise=0.0,
             initial_point_generator="lhs",
-            x0=[[0]]
+            x0=initial_points
         )
         return result.x[0]
     
@@ -136,7 +146,7 @@ def integrate_B(B):
 
     for j, phi_y in enumerate(phi_y_values):
         print(N_phi+j)
-        integral, low_integral, high_integral = integrate_brute_force_current_y(N, mu, B_y, Delta, q_eq, gamma, Lambda, k_F, cut_off, B_x, phi_y, T=T, beta=beta, h=h, radius_values=radius_values)
+        integral, low_integral, high_integral = integrate_brute_force_current_y(N, mu, B_y, Delta, q_eq+q_B, gamma, Lambda, k_F, cut_off, B_x, phi_y, T=T, beta=beta, h=h, radius_values=radius_values)
         current_phi[j] = np.sum(integral) + np.sum(low_integral) + np.sum(high_integral)
         
         # integral, low_integral, high_integral = integrate_brute_force_current_x(N, mu, B_y, Delta, q_eq, gamma, Lambda, k_F, cut_off, B_x, phi_y, T=T, beta=beta, h=h, radius_values=radius_values)
@@ -152,7 +162,7 @@ def integrate_B(B):
     return superfluid_density_xx, superfluid_density_yy, q_eq
 
 if __name__ == "__main__":
-    B_values = np.linspace(0.*Delta, 3*Delta, points)
+    B_values = np.linspace(0*Delta, 3*Delta, points)
     integrate = integrate_B
     B_direction = f"{theta:.2}"
     # integrate = integrate_B_y

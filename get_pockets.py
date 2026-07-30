@@ -413,7 +413,7 @@ def integrate_brute_force_grand_potential(N, mu, B_y, Delta, phi_x, gamma,
         radius_values_1, radius_values_k_F, radius_values_2 = radius_values
         theta_values = np.linspace(-np.pi/2, 3*np.pi/2, N)
     
-        Z = np.zeros((len(radius_values_1), len(theta_values)))
+        Z = np.zeros((len(radius_values_1), len(theta_values)), dtype=complex)
         n = np.zeros((len(radius_values_1), len(theta_values)))
         for i in range(4):
             for j, r in enumerate(radius_values_1):
@@ -427,7 +427,15 @@ def integrate_brute_force_grand_potential(N, mu, B_y, Delta, phi_x, gamma,
                             Z[j, k] = 0
                     else:
                         energy = get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)[0][0][i]
-                        E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        # E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        E = ( r * (-1/(beta)) *   # (-1/(2*beta))
+                        np.where(-beta * energy>0,
+                                 -beta *energy +
+                                 np.log(1 +
+                                     np.exp(beta * energy )),
+                                 np.log(1 +
+                                     np.exp(-beta * energy)))
+                        )
                         Z[j, k] = E
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
@@ -461,7 +469,15 @@ def integrate_brute_force_grand_potential(N, mu, B_y, Delta, phi_x, gamma,
                             Z[j, k] = 0
                     else:
                         energy = get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)[0][0][i]
-                        E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        # E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        E = ( r * (-1/(beta)) *   # (-1/(2*beta))
+                        np.where(-beta * energy>0,
+                                 -beta *energy +
+                                 np.log(1 +
+                                     np.exp(beta * energy )),
+                                 np.log(1 +
+                                     np.exp(-beta * energy)))
+                        )
                         Z[j, k] = E
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
@@ -481,7 +497,7 @@ def integrate_brute_force_grand_potential(N, mu, B_y, Delta, phi_x, gamma,
         
         k_F_integral = np.zeros(4)
         n_k_F_integral = np.zeros(4)
-        Z = np.zeros((len(radius_values_k_F), len(theta_values)))
+        Z = np.zeros((len(radius_values_k_F), len(theta_values)), dtype=complex)
         for i in range(4):
             for j, r in enumerate(radius_values_k_F):
                 for k, theta in enumerate(theta_values):
@@ -494,7 +510,15 @@ def integrate_brute_force_grand_potential(N, mu, B_y, Delta, phi_x, gamma,
                             Z[j, k] = 0
                     else:
                         energy = get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)[0][0][i]
-                        E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        # E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        E = ( r * (-1/(beta)) *   # (-1/(2*beta))
+                        np.where(-beta * energy>0,
+                                 -beta *energy +
+                                 np.log(1 +
+                                     np.exp(beta * energy )),
+                                 np.log(1 +
+                                     np.exp(-beta * energy)))
+                        )
                         Z[j, k] = E
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,
@@ -551,7 +575,15 @@ def integrate_brute_force_grand_potential(N, mu, B_y, Delta, phi_x, gamma,
                             Z[j, k] = 0
                     else:
                         energy = get_Energies_in_polars([r], [theta], mu, B_y, Delta, phi_x, gamma, Lambda, B_x, phi_y)[0][0][i]
-                        E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        # E = r * 1/beta * np.log(1 + np.exp(-beta * energy))
+                        E = ( r * (-1/(beta)) *   # (-1/(2*beta))
+                        np.where(-beta * energy>0,
+                                 -beta *energy +
+                                 np.log(1 +
+                                     np.exp(beta * energy )),
+                                 np.log(1 +
+                                     np.exp(-beta * energy)))
+                        )
                         Z[j, k] = E
             # Integrate with respect to y first
             inner_integral = scipy.integrate.trapezoid(Z, theta_values, axis=0,

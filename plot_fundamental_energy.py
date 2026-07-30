@@ -12,13 +12,13 @@ from pathlib import Path
 
 data_folder = Path(r"./Data")
 
-file_to_open = data_folder / "total_fundamental_energy_B=0_phi_x_in_(-0.0-0.0)_Delta=0_lambda=0_points=19_N_phi=3_N=50_T=False_beta=150.npz"
+file_to_open = data_folder / "total_fundamental_energy_B=0.096_phi_x_in_(-0.001-0.001)_Delta=0.08_lambda=0_points=60_N_phi=3_N=1000_T=False_beta=50_q_D_x=4.565940020746065e-05.npz"
 
 Data = np.load(file_to_open)
 # fundamental_energy = Data["fundamental_energy"]
-fundamental_energy_2DEG = Data["fundamental_energy_2DEG"]
+fundamental_energy_2DEG = np.real(Data["fundamental_energy_2DEG"])
 # fundamental_energy_Al = Data["fundamental_energy_Al"]
-normal_density = Data["normal_density"]
+# normal_density = Data["normal_density"]
 
 phi_x_values = Data["phi_x_values"]
 k_F = Data["k_F"]
@@ -35,15 +35,12 @@ phi_y = Data["phi_y"]
 B_x = Data["B_x"]
 T = Data["T"]
 beta = Data["beta"]
-gamma_Al = Data["gamma_Al"]
-k_F_Al = Data["k_F_Al"]
-cut_off_Al = Data["cut_off_Al"]
-radius_values = Data["radius_values"]
+k_values = Data["k_values"]
 
 
 Aluminum_constant = 0
 
-# fig, ax = plt.subplots()
+fig, ax = plt.subplots()
 
 # ax.plot(phi_x_values, fundamental_energy)
 
@@ -57,24 +54,29 @@ Aluminum_constant = 0
 
 # ax.legend()
 
-fig, ax = plt.subplots()
-fundamental_energy_Al =  Aluminum_constant * phi_x_values**2
+# fig, ax = plt.subplots()
 # ax.plot(phi_x_values, fundamental_energy_2DEG)
 # ax.plot(phi_x_values, fundamental_energy_Al)
-ax.plot(phi_x_values,  fundamental_energy_2DEG + fundamental_energy_Al)
+ax.plot(phi_x_values,  fundamental_energy_2DEG)
+# plt.axvline((1+1.2)*Delta/(2*np.sqrt(gamma*mu))-0.25*q_c, linestyle="dashed", color="red")
+# plt.axvline((1.2-1)*Delta/(2*np.sqrt(gamma*mu))-0.25*q_c, linestyle="dashed", color="red")
+# plt.axvline((1)*Delta/(2*np.sqrt(gamma*mu))-1.5*q_c, linestyle="dashed", color="red")
 
 # # plt.axvline(-q_B, linestyle="dashed", color="red")
 # ax.set_title(r"2DEG $q_B=$" + f"{q_B}" + r"$; B/\Delta=$" + f"{B/Delta}")
 
-# ax.set_xlabel(r"$q_x$")
-# ax.set_ylabel(r"$E_0$")
+
 
 # fig, ax = plt.subplots()
 
 # ax.plot(phi_x_values, (fundamental_energy_Al + fundamental_energy_2DEG)-np.min(fundamental_energy_Al + fundamental_energy_2DEG))
 # ax.plot(phi_x_values, fundamental_energy_Al + fundamental_energy_2DEG )
 
-ax.set_title(r"Aluminum + 2DEG" + r"$; B/\Delta=$" + f"{B/Delta}")
+ax.set_title(r"$B/\Delta=$" + f"{B/Delta}")
+ax.set_xlabel(r"$q_x$")
+ax.set_ylabel(r"$E_0$")
+plt.show()
+
 
 #%%
 
